@@ -12,7 +12,7 @@
 <!-- Open Graph / Social preview -->
 <meta property="og:title" content="In the Mood for a Movie Night" />
 <meta property="og:description" content="Join a virtual nostalgic cinema night — pick a director, a film, and a time." />
-<meta property="og:image" content="https://images.unsplash.com/photo-1515621061946-eff1c2a352bd?q=80&w=1000&auto=format&fit=crop" />
+<meta property="og:image" content="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXv3zr2BfhCPio_0ziVP3qmzN3vnKHoMC0-UqsJPcOwxuU0-PoK_SqysJ8&s=10" />
 <meta property="og:url" content="https://yunjeongj673-commits.github.io/movie/" />
 <meta name="twitter:card" content="summary_large_image" />
 
@@ -28,7 +28,7 @@ body {
 font-family: 'Georgia', serif;
 background-color: var(--bg-color);
 background-image: linear-gradient(rgba(11, 20, 17, 0.7), rgba(11, 20, 17, 0.7)),
-url('https://images.unsplash.com/photo-1515621061946-eff1c2a352bd?q=80&w=1000&auto=format&fit=crop');
+url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXv3zr2BfhCPio_0ziVP3qmzN3vnKHoMC0-UqsJPcOwxuU0-PoK_SqysJ8&s=10');
 background-size: cover;
 background-position: center;
 background-attachment: fixed;
@@ -232,8 +232,6 @@ style="display:none;" data-netlify="false">
 <p style="letter-spacing: 2px; color: var(--neon-green); font-size: 0.9rem;">TONIGHT'S
 SPECIAL INVITATION</p>
 <h1>In the Mood for Love?</h1>
-<p>I know life has been heavy and draining lately. Let's dim the lights, forget the world for a
-few hours, and share a virtual cinema escape together.</p>
 <p class="personal-message">Dear Jamie, I know life has been tough for you these days and I wanted us to do smt that we usually do in a different way. I love you and I hope to hear from you soon!</p>
 <p>Will you join me tonight?</p>
 <div class="btn-container">
@@ -396,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (director === 'Custom') {
       document.getElementById('director-title').innerText = "What's on your mind?";
-      container.innerHTML = `\n<p>Type any movie title, genre, or vibe you want to watch tonight:</p>\n<input type="text" id="custom-movie-input" class="custom-input-box" placeholder="e.g., Blade Runner 1982 / Something spooky / Surprise me">\n`;
+      container.innerHTML = `\n<p>Type any movie title, genre, or vibe you want to watch tonight:</p>\n<input type="text" id="custom-movie-input" class="custom-input-box" placeholder="e.g., Blade[...]
     } else {
       document.getElementById('director-title').innerText = `${director}'s Selection`;
       const md = window.movieData || {};
@@ -405,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const safeTitle = movie.title.replace(/'/g, "\\'");
         container.innerHTML += `\n<div class="option-card" onclick="selectMovieOption(this, '${safeTitle}', false)">\n<h3>${movie.title}</h3>\n<p>${movie.desc}</p>\n</div>\n`;
       });
-      container.innerHTML += `\n<div class="option-card" onclick="selectMovieOption(this, 'CustomDirectorMovie', true)">\n<h3>Other film by ${director}...\n\n🖋\n\n</h3>\n\n<p>Write down your own favorite movie by this master.</p>\n</div>\n`;
+      container.innerHTML += `\n<div class="option-card" onclick="selectMovieOption(this, 'CustomDirectorMovie', true)">\n<h3>Other film by ${director}...\n\n🖋\n\n</h3>\n\n<p>Write down your o[...]
     }
   }
 
