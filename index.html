@@ -9,6 +9,13 @@
 
 </title>
 
+<!-- Open Graph / Social preview -->
+<meta property="og:title" content="In the Mood for a Movie Night" />
+<meta property="og:description" content="Join a virtual nostalgic cinema night — pick a director, a film, and a time." />
+<meta property="og:image" content="https://images.unsplash.com/photo-1515621061946-eff1c2a352bd?q=80&w=1000&auto=format&fit=crop" />
+<meta property="og:url" content="https://yunjeongj673-commits.github.io/movie/" />
+<meta name="twitter:card" content="summary_large_image" />
+
 <style>
 :root {
 --bg-color: #0b1411;
@@ -91,6 +98,13 @@ font-size: 1.05rem;
 line-height: 1.7;
 color: var(--text-cream);
 opacity: 0.9;
+}
+.personal-message {
+margin-top: 12px;
+font-size: 1rem;
+color: var(--text-cream);
+opacity: 0.95;
+font-style: italic;
 }
 .btn-container {
 display: flex;
@@ -220,6 +234,7 @@ SPECIAL INVITATION</p>
 <h1>In the Mood for Love?</h1>
 <p>I know life has been heavy and draining lately. Let's dim the lights, forget the world for a
 few hours, and share a virtual cinema escape together.</p>
+<p class="personal-message">Dear Jamie, I know life has been tough for you these days and I wanted us to do smt that we usually do in a different way. I love you and I hope to hear from you soon!</p>
 <p>Will you join me tonight?</p>
 <div class="btn-container">
 <button type="button" onclick="nextStep(2)">Yes, I'd love to
@@ -334,7 +349,6 @@ center;">Notification sent! See you in a bit.
 </div>
 </div>
 <script>
-console.log('Script loaded');
 
 document.addEventListener('DOMContentLoaded', () => {
   // keep functions in global scope to preserve inline onclick handlers
