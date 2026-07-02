@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In the Mood for a Movie Night
+
+🎬
+
+</title>
+
+<style>
+:root {
+--bg-color: #0b1411;
+--neon-red: #ff3344;
+--neon-green: #00ffaa;
+--text-cream: #f4ebd9;
+--glass-black: rgba(11, 20, 17, 0.88);
+}
+body {
+font-family: 'Georgia', serif;
+background-color: var(--bg-color);
+background-image: linear-gradient(rgba(11, 20, 17, 0.7), rgba(11, 20, 17, 0.7)),
+url('https://images.unsplash.com/photo-1515621061946-eff1c2a352bd?q=80&w=1000&auto=format&fit=crop');
+background-size: cover;
+background-position: center;
+background-attachment: fixed;
+margin: 0;
+padding: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+overflow-x: hidden;
+}
+.container {
+width: 100%;
+max-width: 550px;
+margin: 20px;
+background: var(--glass-black);
+
+padding: 40px 30px;
+border-radius: 4px;
+border: 2px solid var(--neon-red);
+box-shadow: 0 0 30px rgba(255, 51, 68, 0.4), inset 0 0 15px rgba(255, 51, 68, 0.2);
+position: relative;
+box-sizing: border-box;
+backdrop-filter: blur(8px);
+}
+.tape-label {
+position: absolute;
+top: -15px;
+left: 50%;
+transform: translateX(-50%);
+background: #d4af37;
+color: #000;
+padding: 4px 15px;
+font-size: 0.8rem;
+font-weight: bold;
+letter-spacing: 2px;
+text-transform: uppercase;
+}
+.step {
+display: none;
+animation: fadeIn 0.6s ease-in-out forwards;
+}
+.step.active {
+display: block;
+}
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+h1 {
+
+font-size: 2.2rem;
+color: var(--neon-red);
+text-shadow: 0 0 10px rgba(255, 51, 68, 0.6);
+margin-bottom: 25px;
+letter-spacing: 1px;
+font-style: italic;
+}
+h2 {
+font-size: 1.5rem;
+color: var(--neon-green);
+text-shadow: 0 0 8px rgba(0, 255, 170, 0.4);
+margin-bottom: 20px;
+}
+p {
+font-size: 1.05rem;
+line-height: 1.7;
+color: var(--text-cream);
+opacity: 0.9;
+}
+.btn-container {
+display: flex;
+gap: 15px;
+justify-content: center;
+margin-top: 30px;
+flex-wrap: wrap;
+}
+button {
+background: transparent;
+border: 1px solid var(--text-cream);
+color: var(--text-cream);
+padding: 12px 30px;
+font-size: 1rem;
+font-family: 'Georgia', serif;
+cursor: pointer;
+
+transition: all 0.3s;
+letter-spacing: 1px;
+}
+button:hover {
+background: var(--neon-red);
+border-color: var(--neon-red);
+color: #fff;
+box-shadow: 0 0 15px var(--neon-red);
+}
+button.btn-secondary {
+opacity: 0.6;
+}
+button.btn-secondary:hover {
+background: rgba(255,255,255,0.1);
+border-color: var(--text-cream);
+box-shadow: none;
+color: var(--text-cream);
+}
+.time-picker-box {
+margin: 25px 0;
+}
+.time-picker-box input {
+background: rgba(0,0,0,0.6);
+border: 1px solid var(--neon-green);
+color: var(--neon-green);
+font-size: 1.2rem;
+padding: 10px;
+text-align: center;
+font-family: monospace;
+width: 80%;
+max-width: 250px;
+}
+.grid-options {
+
+display: flex;
+flex-direction: column;
+gap: 12px;
+margin-top: 20px;
+text-align: left;
+}
+.option-card {
+background: rgba(255, 255, 255, 0.04);
+border: 1px solid rgba(255, 255, 255, 0.1);
+padding: 15px;
+cursor: pointer;
+transition: all 0.2s;
+}
+.option-card:hover {
+border-color: var(--neon-green);
+background: rgba(0, 255, 170, 0.05);
+}
+.option-card.selected {
+border-color: var(--neon-red);
+background: rgba(255, 51, 68, 0.08);
+}
+.option-card h3 {
+margin: 0 0 5px 0;
+color: #fff;
+font-size: 1.15rem;
+}
+.option-card p {
+margin: 0;
+font-size: 0.85rem;
+color: #bbb;
+}
+.custom-input-box {
+
+width: 100%;
+box-sizing: border-box;
+background: rgba(0,0,0,0.6);
+border: 1px solid var(--text-cream);
+color: #fff;
+padding: 12px;
+font-family: serif;
+font-size: 1rem;
+margin-top: 10px;
+}
+.custom-input-box:focus {
+outline: none;
+border-color: var(--neon-green);
+}
+.receipt {
+border-top: 2px dashed rgba(255,255,255,0.2);
+margin-top: 20px;
+padding-top: 20px;
+text-align: left;
+line-height: 2;
+}
+</style>
+</head>
+<body>
+<!--
+
+📌
+
+Netlify가 수집을 시도해 렉을 유발하지 않도록 data-netlify="false" 속성을 추가했습니다 -->
+<form id="rsvp-form" action="https://formspree.io/f/xpqgyjkn" method="POST"
+style="display:none;" data-netlify="false">
+<input type="text" name="Time" id="form-time">
+<input type="text" name="Director" id="form-director">
+<input type="text" name="Movie" id="form-movie">
+</form>
+<div class="container">
+<div class="tape-label">Hong Kong Cinema Club</div>
+<!-- STEP 1: RSVP -->
+
+<div class="step active" id="step-rsvp">
+<p style="letter-spacing: 2px; color: var(--neon-green); font-size: 0.9rem;">TONIGHT'S
+SPECIAL INVITATION</p>
+<h1>In the Mood for Love?</h1>
+<p>I know life has been heavy and draining lately. Let's dim the lights, forget the world for a
+few hours, and share a virtual cinema escape together.</p>
+<p>Will you join me tonight?</p>
+<div class="btn-container">
+<button onclick="nextStep(2)">Yes, I'd love to
+
+❤
+
+</button>
+
+<button class="btn-secondary" onclick="rejectOffer()">No</button>
+</div>
+</div>
+<!-- STEP 2: 시간 설정 -->
+<div class="step" id="step-time">
+<h2>Set Your Time (EST)</h2>
+<p>Tell me when you'll be ready to unwind. Pick any time tonight that gives you total peace
+of mind.</p>
+<div class="time-picker-box">
+<input type="text" id="date-time" value="09:30 PM EST">
+</div>
+<div class="btn-container">
+<button class="btn-secondary" onclick="prevStep(1)">Back</button>
+<button onclick="nextStep(3)">Next: Choose Director</button>
+</div>
+</div>
+<!-- STEP 3: 감독 선택 -->
+<div class="step" id="step-directors">
+<h2>Select a Master Director</h2>
+<p>Whose cinematic world do you want to dive into tonight?</p>
+<div class="grid-options">
+<div class="option-card" onclick="goToMovies('Wong Kar-wai')">
+<h3>Wong Kar-wai (왕가위)</h3>
+
+<p>Neon rain, melancholic yearning, and beautiful despair.</p>
+</div>
+<div class="option-card" onclick="goToMovies('Akira Kurosawa')">
+<h3>Akira Kurosawa (구로사와 아키라)</h3>
+<p>Masterful dynamics, epic humanism, and timeless storytelling.</p>
+</div>
+<div class="option-card" onclick="goToMovies('Hong Sang-soo')">
+<h3>Hong Sang-soo (홍상수)</h3>
+<p>Raw human interactions, casual drinks, and subtle irony.</p>
+</div>
+<div class="option-card" onclick="goToMovies('Hou Hsiao-效hien')">
+<h3>Hou Hsiao-hsien (허우 샤오시엔)</h3>
+<p>Long takes, poetic realism, and deep historical nostalgia.</p>
+</div>
+<div class="option-card" onclick="goToMovies('Custom')">
+<h3>Something else...
+
+✨
+
+</h3>
+
+<p>Write down any specific movie or genre you have in mind.</p>
+</div>
+</div>
+<div class="btn-container">
+<button class="btn-secondary" onclick="prevStep(2)">Back</button>
+</div>
+</div>
+<!-- STEP 4: 상세 영화 선택 -->
+<div class="step" id="step-movies">
+<h2 id="director-title">Select the Film</h2>
+<p>Pick the story that matches your mood, or type your own:</p>
+<div class="grid-options" id="movie-options-container"></div>
+<div id="director-custom-box" style="display:none; margin-top:15px; text-align:left;">
+<p style="font-size:0.9rem; color:var(--neon-green);">Type your favorite film by this
+director:</p>
+<input type="text" id="director-custom-input" class="custom-input-box"
+placeholder="e.g., Days of Being Wild / Ran / The Day He Arrives...">
+</div>
+
+<div class="btn-container">
+<button class="btn-secondary" onclick="prevStep(3)">Back</button>
+<button onclick="finalizeBooking()">Confirm Booking
+
+🎟
+
+</button>
+
+</div>
+</div>
+<!-- STEP 5: 완료 화면 -->
+<div class="step" id="step-final">
+<h1 style="color: var(--neon-green); text-shadow: 0 0 10px rgba(0,255,170,0.6);">Ticket
+Confirmed.</h1>
+<p>Your sanctuary is ready. Leave everything else to me tonight.</p>
+<div class="receipt">
+🎞
+
+<strong>Event:</strong> Virtual Nostalgic Cinema Date<br>
+⏰
+
+<strong>Time:</strong> <span id="final-time" style="color: var(--neon-green);"></span><br>
+
+🎬
+
+<strong>Feature:</strong> <span id="final-movie" style="color: var(--neon-red); font-style: italic;"></span><br>
+
+🍿
+
+<strong>Perks:</strong> Unlimited comfort + your favorite comfort food on me!
+
+</div>
+<p style="margin-top: 25px; font-size: 0.95rem; opacity: 0.8; text-align:
+center;">Notification sent! See you in a bit.
+
+❤
+
+</p>
+
+</div>
+</div>
+<script>
+let selectedDirector = '';
+let selectedMovie = '';
+let chosenTime = '';
+const movieData = {
+'Wong Kar-wai': [
+{ title: 'In the Mood for Love (화양연화)', desc: 'Beautifully suffocating romance, iconic
+cheongsams, and slow-burn longing.' },
+{ title: 'Chungking Express (중경삼림)', desc: 'Pineapple cans, neon-lit fast food joints, and
+dreamlike indie romance.' },
+
+{ title: 'Happy Together (해피 투게더)', desc: 'Raw emotional battles, a tango in Buenos
+Aires, and bittersweet endings.' }
+],
+'Akira Kurosawa': [
+{ title: 'Rashomon (라쇼몽)', desc: 'A multi-perspective masterpiece exploring the fragility of
+human truth.' },
+{ title: 'Seven Samurai (7인의 사무라이)', desc: 'The grandfather of action cinema. Grand
+scale, deep character studies.' },
+{ title: 'High and Low (천국과 지옥)', desc: 'Tense, brilliant noir thriller dealing with morality
+and class gap.' }
+],
+'Hong Sang-soo': [
+{ title: 'Right Now, Wrong Then (지금은맞고그때는틀리다)', desc: 'A charming, repeating story
+about perspectives, honesty, and lots of Soju.' },
+{ title: 'The Woman Who Ran (도망친 여자)', desc: 'Minimalist, engaging conversations
+revealing the deeper layers of life.' }
+],
+'Hou Hsiao-hsien': [
+{ title: 'A City of Sadness (비정성시)', desc: 'An epic, heartbreakingly poetic look into
+historical memory and family drama.' },
+{ title: 'Millennium Mambo (밀레니엄 맘보)', desc: 'Hypnotic neon lights, cold blue
+aesthetics, and youth disillusionment.' }
+]
+};
+function nextStep(stepNum) {
+document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+if (stepNum === 2) document.getElementById('step-time').classList.add('active');
+if (stepNum === 3) {
+chosenTime = document.getElementById('date-time').value;
+document.getElementById('step-directors').classList.add('active');
+}
+}
+function prevStep(stepNum) {
+document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+if(stepNum === 1) document.getElementById('step-rsvp').classList.add('active');
+if(stepNum === 2) document.getElementById('step-time').classList.add('active');
+
+if(stepNum === 3) document.getElementById('step-directors').classList.add('active');
+}
+let rejectCount = 0;
+function rejectOffer() {
+rejectCount++;
+if (rejectCount === 1) {
+alert("Are you absolutely sure?
+
+🥺
+
+Think about the cozy vibes and delicious food waiting
+
+for you...");
+} else if (rejectCount === 2) {
+alert("Wait, you're still saying no? Give me a chance to comfort you tonight!
+
+🙏
+
+");
+
+} else {
+alert("Error 404: 'No' is not an acceptable answer for someone who needs a hug. Click
+'Yes' instead!
+
+😉
+
+");
+rejectCount = 0;
+}
+}
+function goToMovies(director) {
+selectedDirector = director;
+selectedMovie = '';
+document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+document.getElementById('step-movies').classList.add('active');
+const container = document.getElementById('movie-options-container');
+const customBox = document.getElementById('director-custom-box');
+container.innerHTML = '';
+customBox.style.display = 'none';
+document.getElementById('director-custom-input').value = '';
+if (director === 'Custom') {
+document.getElementById('director-title').innerText = "What's on your mind?";
+container.innerHTML = `
+<p>Type any movie title, genre, or vibe you want to watch tonight:</p>
+<input type="text" id="custom-movie-input" class="custom-input-box"
+placeholder="e.g., Blade Runner 1982 / Something spooky / Surprise me">
+`;
+} else {
+
+document.getElementById('director-title').innerText = `${director}'s Selection`;
+movieData[director].forEach((movie) => {
+container.innerHTML += `
+<div class="option-card" onclick="selectMovieOption(this, '${movie.title.replace(/'/g,
+"\\'")}', false)">
+<h3>${movie.title}</h3>
+<p>${movie.desc}</p>
+</div>
+`;
+});
+container.innerHTML += `
+<div class="option-card" onclick="selectMovieOption(this, 'CustomDirectorMovie',
+true)">
+<h3>Other film by ${director}...
+
+🖋
+
+</h3>
+
+<p>Write down your own favorite movie by this master.</p>
+</div>
+`;
+}
+}
+function selectMovieOption(element, movieTitle, isCustom) {
+document.querySelectorAll('#movie-options-container .option-card').forEach(card =>
+card.classList.remove('selected'));
+element.classList.add('selected');
+const customBox = document.getElementById('director-custom-box');
+if (isCustom) {
+customBox.style.display = 'block';
+selectedMovie = 'CustomDirectorMovie';
+} else {
+customBox.style.display = 'none';
+selectedMovie = movieTitle;
+}
+}
+function finalizeBooking() {
+
+if (selectedDirector === 'Custom') {
+const inputVal = document.getElementById('custom-movie-input').value;
+if (!inputVal.trim()) {
+alert("Please write down what you'd like to watch!
+
+✨
+
+");
+
+return;
+}
+selectedMovie = `"${inputVal}" (Personal Choice)`;
+}
+else if (selectedMovie === 'CustomDirectorMovie') {
+const inputVal = document.getElementById('director-custom-input').value;
+if (!inputVal.trim()) {
+alert(`Please write down the movie by ${selectedDirector}!
+
+🎬
+
+`);
+
+return;
+}
+selectedMovie = `"${inputVal}" (by ${selectedDirector})`;
+}
+else if (!selectedMovie) {
+alert("Please select a film to confirm our date!
+
+🍿
+
+");
+
+return;
+}
+document.getElementById('final-time').innerText = chosenTime;
+document.getElementById('final-movie').innerText = selectedMovie;
+document.getElementById('form-time').value = chosenTime;
+document.getElementById('form-director').value = selectedDirector;
+document.getElementById('form-movie').value = selectedMovie;
+const form = document.getElementById('rsvp-form');
+fetch(form.action, {
+method: 'POST',
+body: new FormData(form),
+headers: { 'Accept': 'application/json' }
+});
+document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+document.getElementById('step-final').classList.add('active');
+
+alert("Invitation accepted! Booking details saved
+
+🌹
+
+See you soon!");
+
+}
+</script>
+</body>
+</html>
