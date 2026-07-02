@@ -222,13 +222,13 @@ SPECIAL INVITATION</p>
 few hours, and share a virtual cinema escape together.</p>
 <p>Will you join me tonight?</p>
 <div class="btn-container">
-<button onclick="nextStep(2)">Yes, I'd love to
+<button type="button" onclick="nextStep(2)">Yes, I'd love to
 
 ❤
 
 </button>
 
-<button class="btn-secondary" onclick="rejectOffer()">No</button>
+<button type="button" class="btn-secondary" onclick="rejectOffer()">No</button>
 </div>
 </div>
 <!-- STEP 2: 시간 설정 -->
@@ -240,8 +240,8 @@ of mind.</p>
 <input type="text" id="date-time" value="09:30 PM EST">
 </div>
 <div class="btn-container">
-<button class="btn-secondary" onclick="prevStep(1)">Back</button>
-<button onclick="nextStep(3)">Next: Choose Director</button>
+<button type="button" class="btn-secondary" onclick="prevStep(1)">Back</button>
+<button type="button" onclick="nextStep(3)">Next: Choose Director</button>
 </div>
 </div>
 <!-- STEP 3: 감독 선택 -->
@@ -262,7 +262,7 @@ of mind.</p>
 <h3>Hong Sang-soo (홍상수)</h3>
 <p>Raw human interactions, casual drinks, and subtle irony.</p>
 </div>
-<div class="option-card" onclick="goToMovies('Hou Hsiao-效hien')">
+<div class="option-card" onclick="goToMovies('Hou Hsiao-hsien')">
 <h3>Hou Hsiao-hsien (허우 샤오시엔)</h3>
 <p>Long takes, poetic realism, and deep historical nostalgia.</p>
 </div>
@@ -277,7 +277,7 @@ of mind.</p>
 </div>
 </div>
 <div class="btn-container">
-<button class="btn-secondary" onclick="prevStep(2)">Back</button>
+<button type="button" class="btn-secondary" onclick="prevStep(2)">Back</button>
 </div>
 </div>
 <!-- STEP 4: 상세 영화 선택 -->
@@ -293,8 +293,8 @@ placeholder="e.g., Days of Being Wild / Ran / The Day He Arrives...">
 </div>
 
 <div class="btn-container">
-<button class="btn-secondary" onclick="prevStep(3)">Back</button>
-<button onclick="finalizeBooking()">Confirm Booking
+<button type="button" class="btn-secondary" onclick="prevStep(3)">Back</button>
+<button type="button" onclick="finalizeBooking()">Confirm Booking
 
 🎟
 
@@ -334,197 +334,130 @@ center;">Notification sent! See you in a bit.
 </div>
 </div>
 <script>
-let selectedDirector = '';
-let selectedMovie = '';
-let chosenTime = '';
-const movieData = {
-'Wong Kar-wai': [
-{ title: 'In the Mood for Love (화양연화)', desc: 'Beautifully suffocating romance, iconic
-cheongsams, and slow-burn longing.' },
-{ title: 'Chungking Express (중경삼림)', desc: 'Pineapple cans, neon-lit fast food joints, and
-dreamlike indie romance.' },
+console.log('Script loaded');
 
-{ title: 'Happy Together (해피 투게더)', desc: 'Raw emotional battles, a tango in Buenos
-Aires, and bittersweet endings.' }
-],
-'Akira Kurosawa': [
-{ title: 'Rashomon (라쇼몽)', desc: 'A multi-perspective masterpiece exploring the fragility of
-human truth.' },
-{ title: 'Seven Samurai (7인의 사무라이)', desc: 'The grandfather of action cinema. Grand
-scale, deep character studies.' },
-{ title: 'High and Low (천국과 지옥)', desc: 'Tense, brilliant noir thriller dealing with morality
-and class gap.' }
-],
-'Hong Sang-soo': [
-{ title: 'Right Now, Wrong Then (지금은맞고그때는틀리다)', desc: 'A charming, repeating story
-about perspectives, honesty, and lots of Soju.' },
-{ title: 'The Woman Who Ran (도망친 여자)', desc: 'Minimalist, engaging conversations
-revealing the deeper layers of life.' }
-],
-'Hou Hsiao-hsien': [
-{ title: 'A City of Sadness (비정성시)', desc: 'An epic, heartbreakingly poetic look into
-historical memory and family drama.' },
-{ title: 'Millennium Mambo (밀레니엄 맘보)', desc: 'Hypnotic neon lights, cold blue
-aesthetics, and youth disillusionment.' }
-]
+document.addEventListener('DOMContentLoaded', () => {
+  // keep functions in global scope to preserve inline onclick handlers
+  window.nextStep = function(stepNum) {
+    document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+    if (stepNum === 2) document.getElementById('step-time').classList.add('active');
+    if (stepNum === 3) {
+      const dt = document.getElementById('date-time');
+      if (dt) window.chosenTime = dt.value;
+      document.getElementById('step-directors').classList.add('active');
+    }
+  }
+
+  window.prevStep = function(stepNum) {
+    document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+    if(stepNum === 1) document.getElementById('step-rsvp').classList.add('active');
+    if(stepNum === 2) document.getElementById('step-time').classList.add('active');
+    if(stepNum === 3) document.getElementById('step-directors').classList.add('active');
+  }
+
+  window.rejectOffer = function() {
+    if (typeof window.rejectCount === 'undefined') window.rejectCount = 0;
+    window.rejectCount++;
+    if (window.rejectCount === 1) {
+      alert("Are you absolutely sure?\n\n🥺\n\nThink about the cozy vibes and delicious food waiting\n\nfor you...");
+    } else if (window.rejectCount === 2) {
+      alert("Wait, you're still saying no? Give me a chance to comfort you tonight!\n\n🙏\n\n");
+    } else {
+      alert("Error 404: 'No' is not an acceptable answer for someone who needs a hug. Click 'Yes' instead!\n\n😉\n\n");
+      window.rejectCount = 0;
+    }
+  }
+
+  window.goToMovies = function(director) {
+    window.selectedDirector = director;
+    window.selectedMovie = '';
+    document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+    document.getElementById('step-movies').classList.add('active');
+    const container = document.getElementById('movie-options-container');
+    const customBox = document.getElementById('director-custom-box');
+    container.innerHTML = '';
+    customBox.style.display = 'none';
+    const directorInput = document.getElementById('director-custom-input');
+    if (directorInput) directorInput.value = '';
+
+    if (director === 'Custom') {
+      document.getElementById('director-title').innerText = "What's on your mind?";
+      container.innerHTML = `\n<p>Type any movie title, genre, or vibe you want to watch tonight:</p>\n<input type="text" id="custom-movie-input" class="custom-input-box" placeholder="e.g., Blade Runner 1982 / Something spooky / Surprise me">\n`;
+    } else {
+      document.getElementById('director-title').innerText = `${director}'s Selection`;
+      const md = window.movieData || {};
+      const list = md[director] || [];
+      list.forEach((movie) => {
+        const safeTitle = movie.title.replace(/'/g, "\\'");
+        container.innerHTML += `\n<div class="option-card" onclick="selectMovieOption(this, '${safeTitle}', false)">\n<h3>${movie.title}</h3>\n<p>${movie.desc}</p>\n</div>\n`;
+      });
+      container.innerHTML += `\n<div class="option-card" onclick="selectMovieOption(this, 'CustomDirectorMovie', true)">\n<h3>Other film by ${director}...\n\n🖋\n\n</h3>\n\n<p>Write down your own favorite movie by this master.</p>\n</div>\n`;
+    }
+  }
+
+  window.selectMovieOption = function(element, movieTitle, isCustom) {
+    document.querySelectorAll('#movie-options-container .option-card').forEach(card => card.classList.remove('selected'));
+    element.classList.add('selected');
+    const customBox = document.getElementById('director-custom-box');
+    if (isCustom) {
+      customBox.style.display = 'block';
+      window.selectedMovie = 'CustomDirectorMovie';
+    } else {
+      customBox.style.display = 'none';
+      window.selectedMovie = movieTitle;
+    }
+  }
+
+  window.finalizeBooking = function() {
+    if (window.selectedDirector === 'Custom') {
+      const inputVal = document.getElementById('custom-movie-input').value;
+      if (!inputVal.trim()) { alert("Please write down what you'd like to watch!\n\n✨\n\n"); return; }
+      window.selectedMovie = `"${inputVal}" (Personal Choice)`;
+    } else if (window.selectedMovie === 'CustomDirectorMovie') {
+      const inputVal = document.getElementById('director-custom-input').value;
+      if (!inputVal.trim()) { alert(`Please write down the movie by ${window.selectedDirector}!\n\n🎬\n\n`); return; }
+      window.selectedMovie = `"${inputVal}" (by ${window.selectedDirector})`;
+    } else if (!window.selectedMovie) {
+      alert("Please select a film to confirm our date!\n\n🍿\n\n"); return;
+    }
+    const chosenTime = window.chosenTime || '';
+    document.getElementById('final-time').innerText = chosenTime;
+    document.getElementById('final-movie').innerText = window.selectedMovie;
+    document.getElementById('form-time').value = chosenTime;
+    document.getElementById('form-director').value = window.selectedDirector;
+    document.getElementById('form-movie').value = window.selectedMovie;
+    const form = document.getElementById('rsvp-form');
+    if (form && form.action) {
+      fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } }).catch(e => console.warn('Form post failed', e));
+    }
+    document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+    document.getElementById('step-final').classList.add('active');
+    alert("Invitation accepted! Booking details saved\n\n🌹\n\nSee you soon!");
+  }
+
+});
+
+// movie data in global scope for template to use
+window.movieData = {
+  'Wong Kar-wai': [
+    { title: 'In the Mood for Love (화양연화)', desc: 'Beautifully suffocating romance, iconic cheongsams, and slow-burn longing.' },
+    { title: 'Chungking Express (중경삼림)', desc: 'Pineapple cans, neon-lit fast food joints, and dreamlike indie romance.' },
+    { title: 'Happy Together (해피 투게더)', desc: 'Raw emotional battles, a tango in Buenos Aires, and bittersweet endings.' }
+  ],
+  'Akira Kurosawa': [
+    { title: 'Rashomon (라쇼몽)', desc: 'A multi-perspective masterpiece exploring the fragility of human truth.' },
+    { title: 'Seven Samurai (7인의 사무라이)', desc: 'The grandfather of action cinema. Grand scale, deep character studies.' },
+    { title: 'High and Low (천국과 지옥)', desc: 'Tense, brilliant noir thriller dealing with morality and class gap.' }
+  ],
+  'Hong Sang-soo': [
+    { title: 'Right Now, Wrong Then (지금은맞고그때는틀리다)', desc: 'A charming, repeating story about perspectives, honesty, and lots of Soju.' },
+    { title: 'The Woman Who Ran (도망친 여자)', desc: 'Minimalist, engaging conversations revealing the deeper layers of life.' }
+  ],
+  'Hou Hsiao-hsien': [
+    { title: 'A City of Sadness (비정성시)', desc: 'An epic, heartbreakingly poetic look into historical memory and family drama.' },
+    { title: 'Millennium Mambo (밀레니엄 맘보)', desc: 'Hypnotic neon lights, cold blue aesthetics, and youth disillusionment.' }
+  ]
 };
-function nextStep(stepNum) {
-document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
-if (stepNum === 2) document.getElementById('step-time').classList.add('active');
-if (stepNum === 3) {
-chosenTime = document.getElementById('date-time').value;
-document.getElementById('step-directors').classList.add('active');
-}
-}
-function prevStep(stepNum) {
-document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
-if(stepNum === 1) document.getElementById('step-rsvp').classList.add('active');
-if(stepNum === 2) document.getElementById('step-time').classList.add('active');
-
-if(stepNum === 3) document.getElementById('step-directors').classList.add('active');
-}
-let rejectCount = 0;
-function rejectOffer() {
-rejectCount++;
-if (rejectCount === 1) {
-alert("Are you absolutely sure?
-
-🥺
-
-Think about the cozy vibes and delicious food waiting
-
-for you...");
-} else if (rejectCount === 2) {
-alert("Wait, you're still saying no? Give me a chance to comfort you tonight!
-
-🙏
-
-");
-
-} else {
-alert("Error 404: 'No' is not an acceptable answer for someone who needs a hug. Click
-'Yes' instead!
-
-😉
-
-");
-rejectCount = 0;
-}
-}
-function goToMovies(director) {
-selectedDirector = director;
-selectedMovie = '';
-document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
-document.getElementById('step-movies').classList.add('active');
-const container = document.getElementById('movie-options-container');
-const customBox = document.getElementById('director-custom-box');
-container.innerHTML = '';
-customBox.style.display = 'none';
-document.getElementById('director-custom-input').value = '';
-if (director === 'Custom') {
-document.getElementById('director-title').innerText = "What's on your mind?";
-container.innerHTML = `
-<p>Type any movie title, genre, or vibe you want to watch tonight:</p>
-<input type="text" id="custom-movie-input" class="custom-input-box"
-placeholder="e.g., Blade Runner 1982 / Something spooky / Surprise me">
-`;
-} else {
-
-document.getElementById('director-title').innerText = `${director}'s Selection`;
-movieData[director].forEach((movie) => {
-container.innerHTML += `
-<div class="option-card" onclick="selectMovieOption(this, '${movie.title.replace(/'/g,
-"\\'")}', false)">
-<h3>${movie.title}</h3>
-<p>${movie.desc}</p>
-</div>
-`;
-});
-container.innerHTML += `
-<div class="option-card" onclick="selectMovieOption(this, 'CustomDirectorMovie',
-true)">
-<h3>Other film by ${director}...
-
-🖋
-
-</h3>
-
-<p>Write down your own favorite movie by this master.</p>
-</div>
-`;
-}
-}
-function selectMovieOption(element, movieTitle, isCustom) {
-document.querySelectorAll('#movie-options-container .option-card').forEach(card =>
-card.classList.remove('selected'));
-element.classList.add('selected');
-const customBox = document.getElementById('director-custom-box');
-if (isCustom) {
-customBox.style.display = 'block';
-selectedMovie = 'CustomDirectorMovie';
-} else {
-customBox.style.display = 'none';
-selectedMovie = movieTitle;
-}
-}
-function finalizeBooking() {
-
-if (selectedDirector === 'Custom') {
-const inputVal = document.getElementById('custom-movie-input').value;
-if (!inputVal.trim()) {
-alert("Please write down what you'd like to watch!
-
-✨
-
-");
-
-return;
-}
-selectedMovie = `"${inputVal}" (Personal Choice)`;
-}
-else if (selectedMovie === 'CustomDirectorMovie') {
-const inputVal = document.getElementById('director-custom-input').value;
-if (!inputVal.trim()) {
-alert(`Please write down the movie by ${selectedDirector}!
-
-🎬
-
-`);
-
-return;
-}
-selectedMovie = `"${inputVal}" (by ${selectedDirector})`;
-}
-else if (!selectedMovie) {
-alert("Please select a film to confirm our date!
-
-🍿
-
-");
-
-return;
-}
-document.getElementById('final-time').innerText = chosenTime;
-document.getElementById('final-movie').innerText = selectedMovie;
-document.getElementById('form-time').value = chosenTime;
-document.getElementById('form-director').value = selectedDirector;
-document.getElementById('form-movie').value = selectedMovie;
-const form = document.getElementById('rsvp-form');
-fetch(form.action, {
-method: 'POST',
-body: new FormData(form),
-headers: { 'Accept': 'application/json' }
-});
-document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
-document.getElementById('step-final').classList.add('active');
-
-alert("Invitation accepted! Booking details saved
-
-🌹
-
-See you soon!");
-
-}
 </script>
 </body>
 </html>
